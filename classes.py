@@ -2,6 +2,7 @@ from random import *
 import tkinter as tk
 import time
 
+
 class Space_invaders():
     '''
     Space_invaders
@@ -11,7 +12,8 @@ class Space_invaders():
     Description:
     Classe qui regroupe toutes les entitées du jeu.
     '''
-    def __init__(self,fenetre,player,x_max,y_max):
+
+    def __init__(self, fenetre, player, x_max, y_max):
         self.fenetre = fenetre
         self.enemy = []
         self.player = player
@@ -19,7 +21,9 @@ class Space_invaders():
         self.y_fentre_max = y_max
 
 
-Sp_Inv = Space_invaders("myWindow","player",300,300)  # initialisation test 
+Sp_Inv = Space_invaders("myWindow", "player", 300, 300)  # initialisation test
+
+
 class Entity():
     '''
     Entity
@@ -41,20 +45,18 @@ class Entity():
         self.photo = tk.PhotoImage(file=self.img)
         self.canvas = tk.Canvas.create_image(self.position[0], self.position[1], image = self.photo)
 
+    def placement(self, position):  # positionne l'entité dur la map
+        if len(position) == 2 and position[0] >= 0 and position[1] >= 0:
 
-    def placement(self,position):  # positionne l'entité dur la map
-        if len(position) == 2 and position[0]>=0 and position[1]>=0:
             self.position.append(position)
         else:
-            self.position.append([0,0])
+            self.position.append([0, 0])
 
-
-    def shoot(self,nb):  # nb=0 pour le player et nb=1 pour les monstres
-        if nb==0:
+    def shoot(self, nb):  # nb=0 pour le player et nb=1 pour les monstres
+        if nb == 0:
             self.direction_tir = "up"
-        elif nb==1:
+        elif nb == 1:
             self.direction_tir = "down"
-
 
 
 class Player(Entity):
@@ -87,7 +89,6 @@ class Player(Entity):
         print(self.position)
 
 
-
 class Monster(Entity):
     def deplacement_monstre(self):   # speed est un nombre de pixels
         if self.position[0] == 0:
@@ -101,19 +102,19 @@ class Monster(Entity):
 
         if self.position[0] == Sp_Inv.x_fenetre_max:
             while self.position[0] != 0:
-                if self.position[0]-self.speed>0:
+                if self.position[0]-self.speed > 0:
                     self.position[0] -= self.speed
-                else: 
+                else:
                     self.position[0] = 0
                 print(self.position)
                 time.sleep(1)
 
-    #def deplacement_player(self):
-        
-    def shoot(self,nb):  # nb=0 pour le player et nb=1 pour les monstres
-        if nb==0:
+    # def deplacement_player(self):
+
+    def shoot(self, nb):  # nb=0 pour le player et nb=1 pour les monstres
+        if nb == 0:
             self.direction_tir = "up"
-        elif nb==1:
+        elif nb == 1:
             self.direction_tir = "down"
 
 
