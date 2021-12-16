@@ -56,31 +56,34 @@ class Entity():
         elif nb == 1:
             self.direction_tir = "down"
 
+    
+
 
 class Player(Entity):
-    def deplacement_player(self,event): # side = gauche ou droite
+    
+    def deplacement_player(self, event):  # side = gauche ou droite
         side = event.keysym
 
         if side == "<Left>":
-            if self.position[0]-self.speed>0:
+            if self.position[0]-self.speed > 0:
                 self.position[0] -= self.speed
             else:
                 self.position[0] = 0
-        
+
         if side == "<Right>":
-            if self.position[0]+self.speed<Sp_Inv.x_fenetre_max:
+            if self.position[0]+self.speed < Sp_Inv.x_fenetre_max:
                 self.position[0] += self.speed
             else:
                 self.position[0] = Sp_Inv.x_fenetre_max
 
         if side == "<Down>":
-            if self.position[1]-self.speed>0:
+            if self.position[1]-self.speed > 0:
                 self.position[1] -= self.speed
             else:
                 self.position[1] = 0
-        
+
         if side == "<Up>":
-            if self.position[1]+self.speed<Sp_Inv.y_fenetre_max:
+            if self.position[1]+self.speed < Sp_Inv.y_fenetre_max:
                 self.position[1] += self.speed
             else:
                 self.position[1] = Sp_Inv.y_fenetre_max
@@ -116,6 +119,7 @@ class Monster(Entity):
             self.direction_tir = "down"
 
 
-player = Player(3)
-monster = Monster(3, 10, [300, Sp_Inv.y_fentre_max])
-monster.deplacement_monstre()
+if __name__ == "__main__":
+    player = Player(3)
+    monster = Monster(3, 10, [300, Sp_Inv.y_fentre_max])
+    monster.deplacement_monstre()
