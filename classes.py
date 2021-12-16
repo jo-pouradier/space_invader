@@ -3,7 +3,14 @@ from tkinter import *
 import time
 
 class Space_invaders():
+    '''
+    Space_invaders
+    dev: Adrien
+    date: 2021-12-16 09:55:42
 
+    Description:
+    Classe qui regroupe toutes les entitées du jeu.
+    '''
     def __init__(self,fenetre,player,x_max,y_max):
         self.fenetre = fenetre
         self.enemy = []
@@ -14,7 +21,14 @@ class Space_invaders():
 
 Sp_Inv = Space_invaders("myWindow","player",300,300)  # initialisation test 
 class Entity():
+    '''
+    Entity
+    dev: Adrien
+    date: 2021-12-16 09:56:36
 
+    Description:
+    Classe de position des entitées du jeu
+    '''
     def __init__(self,lives,speed = 1, position = [0,0]):
         self.forme = []        # les petits carrés à afficher
         self.lives = lives     # nombre de vies (3 pour le joueur et a definir pour les enemies)
@@ -91,7 +105,13 @@ class Monster(Entity):
                 print(self.position)
                 time.sleep(1)
 
-
+    #def deplacement_player(self):
+        
+    def shoot(self,nb):  # nb=0 pour le player et nb=1 pour les monstres
+        if nb==0:
+            self.direction_tir = "up"
+        elif nb==1:
+            self.direction_tir = "down"
 
 
 
