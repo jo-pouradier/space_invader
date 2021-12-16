@@ -1,5 +1,5 @@
 from random import *
-from tkinter import *
+import tkinter as tk
 import time
 
 class Space_invaders():
@@ -29,15 +29,18 @@ class Entity():
     Description:
     Classe de position des entitées du jeu
     '''
-    def __init__(self,lives,speed = 1, position = [0,0]):
-        self.forme = []        # les petits carrés à afficher
+    def __init__(self,lives,speed = 1, position = [0,0],img = ""):
         self.lives = lives     # nombre de vies (3 pour le joueur et a definir pour les enemies)
         self.position = position  # position sur la map
         self.damage = 1
         self.border = 0  # désigne la ligne que le joueur ou le monstre ne peux pas dépasser
         self.speed = speed
+        self.img = img
 
-    
+    def create(self):
+        self.photo = tk.PhotoImage(file=self.img)
+        self.canvas = tk.Canvas.create_image(self.position[0], self.position[1], image = self.photo)
+
 
     def placement(self,position):  # positionne l'entité dur la map
         if len(position) == 2 and position[0]>=0 and position[1]>=0:
@@ -70,13 +73,13 @@ class Player(Entity):
             else:
                 self.position[0] = Sp_Inv.x_fenetre_max
 
-        if side == "<Down>":
+        if side == "<Up>":
             if self.position[1]-self.speed>0:
                 self.position[1] -= self.speed
             else:
                 self.position[1] = 0
         
-        if side == "<Up>":
+        if side == "<Down>":
             if self.position[1]+self.speed<Sp_Inv.y_fenetre_max:
                 self.position[1] += self.speed
             else:
@@ -96,7 +99,7 @@ class Monster(Entity):
                 print(self.position)
                 time.sleep(1)
 
-        elif self.position[0] == Sp_Inv.x_fenetre_max:
+        if self.position[0] == Sp_Inv.x_fenetre_max:
             while self.position[0] != 0:
                 if self.position[0]-self.speed>0:
                     self.position[0] -= self.speed
@@ -114,10 +117,10 @@ class Monster(Entity):
             self.direction_tir = "down"
 
 
-
-player = Player(3)
-monster = Monster(3,10,[300,Sp_Inv.y_fentre_max])
-monster.deplacement_monstre()
+if __name__=='__main__':
+    player = Player(3,"vaisseau_player.jpg")
+    monster = Monster(3,10,[300,Sp_Inv.y_fentre_max])
+    monster.deplacement_monstre()
 
 
 
