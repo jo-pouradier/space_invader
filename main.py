@@ -25,10 +25,10 @@ class main_view(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
-        cv = tk.Canvas(self)
-        cv.configure(highlightbackground='blue',
-                     highlightthickness=2)
-        cv.grid(row=1, column=0, sticky='nsew')
+        self.cv = tk.Canvas(self)
+        self.cv.configure(highlightbackground='blue',
+                          highlightthickness=2)
+        self.cv.grid(row=1, column=0, sticky='nsew')
 
         bouton_quitter = tk.Button(
             info_frame, text='Quitter', fg='black', command=self.master.destroy)
@@ -37,8 +37,6 @@ class main_view(tk.Frame):
             info_frame, text='New Game', fg='black', command=None)
         bouton_new_game.grid(row=0, column=3, sticky='e')
         main_view.centrage(self)
-
-        player = cv.create_rectangle(20, 20, 40, 40)
 
     def centrage(self):
         '''
@@ -65,4 +63,12 @@ if __name__ == "__main__":
     window = main_view(root)
     window.configure(highlightbackground='yellow', highlightthickness=2)
     window.pack(side="top", fill="both", expand=True)
+    player_carré = window.cv.create_rectangle(20, 20, 40, 40)
+
+    player = cl.Player(lives=3, img='images/vaisseau_player.png')
+    player.placement([(int(window.winfo_width())/2),
+                     (int(window.winfo_height())/2)])
+    player.create(window.cv)
+    #sp_inv=cl.Space_invaders(canvas=window.cv, player=player,x_max=window.winfo_width(), y_max=window.winfo_height())
+
     root.mainloop()

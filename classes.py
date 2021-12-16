@@ -2,6 +2,8 @@ from random import *
 import tkinter as tk
 import time
 
+# pas sur qu'elle soit utile
+
 
 class Space_invaders():
     '''
@@ -13,8 +15,8 @@ class Space_invaders():
     Classe qui regroupe toutes les entitées du jeu.
     '''
 
-    def __init__(self, fenetre, player, x_max, y_max):
-        self.fenetre = fenetre
+    def __init__(self, canvas, player, x_max, y_max):
+        self.canvas = canvas
         self.enemy = []
         self.player = player
         self.x_fenetre_max = x_max
@@ -33,17 +35,20 @@ class Entity():
     Description:
     Classe de position des entitées du jeu
     '''
-    def __init__(self,lives,speed = 1, position = [0,0],img = ""):
-        self.lives = lives     # nombre de vies (3 pour le joueur et a definir pour les enemies)
+
+    def __init__(self, lives, speed=1, position=[0, 0], img="",):
+        # nombre de vies (3 pour le joueur et a definir pour les enemies)
+        self.lives = lives
         self.position = position  # position sur la map
         self.damage = 1
         self.border = 0  # désigne la ligne que le joueur ou le monstre ne peux pas dépasser
         self.speed = speed
         self.img = img
 
-    def create(self):
+    def create(self, canvas):
         self.photo = tk.PhotoImage(file=self.img)
-        self.canvas = tk.Canvas.create_image(self.position[0], self.position[1], image = self.photo)
+        self.form = canvas.create_image(
+            self.position[0], self.position[1], image=self.photo)
 
     def placement(self, position):  # positionne l'entité dur la map
         if len(position) == 2 and position[0] >= 0 and position[1] >= 0:
@@ -58,11 +63,9 @@ class Entity():
         elif nb == 1:
             self.direction_tir = "down"
 
-    
-
 
 class Player(Entity):
-    
+
     def deplacement_player(self, event):  # side = gauche ou droite
         side = event.keysym
 
@@ -79,13 +82,13 @@ class Player(Entity):
                 self.position[0] = Sp_Inv.x_fenetre_max
 
         if side == "<Up>":
-            if self.position[1]-self.speed>0:
+            if self.position[1]-self.speed > 0:
                 self.position[1] -= self.speed
             else:
                 self.position[1] = 0
-        
+
         if side == "<Down>":
-            if self.position[1]+self.speed<Sp_Inv.y_fenetre_max:
+            if self.position[1]+self.speed < Sp_Inv.y_fenetre_max:
                 self.position[1] += self.speed
             else:
                 self.position[1] = Sp_Inv.y_fenetre_max
@@ -121,15 +124,7 @@ class Monster(Entity):
             self.direction_tir = "down"
 
 
-if __name__=='__main__':
-    player = Player(3,"vaisseau_player.jpg")
-    monster = Monster(3,10,[300,Sp_Inv.y_fentre_max])
+if __name__ == '__main__':
+    player = Player(3, "vaisseau_player.jpg")
+    monster = Monster(3, 10, [300, Sp_Inv.y_fentre_max])
     monster.deplacement_monstre()
-
-
-
-
-
-
-
-
