@@ -45,6 +45,7 @@ class Entity():
 
     def placement(self, position):  # positionne l'entité dur la map
         if len(position) == 2 and position[0] >= 0 and position[1] >= 0:
+
             self.position.append(position)
         else:
             self.position.append([0, 0])
@@ -57,27 +58,29 @@ class Entity():
 
 
 class Player(Entity):
-    def deplacement_player(self, side):  # side = gauche ou droite
+    def deplacement_player(self,event): # side = gauche ou droite
+        side = event.keysym
+
         if side == "<Left>":
-            if self.position[0]-self.speed > 0:
+            if self.position[0]-self.speed>0:
                 self.position[0] -= self.speed
             else:
                 self.position[0] = 0
-
+        
         if side == "<Right>":
-            if self.position[0]+self.speed < Sp_Inv.x_fenetre_max:
+            if self.position[0]+self.speed<Sp_Inv.x_fenetre_max:
                 self.position[0] += self.speed
             else:
                 self.position[0] = Sp_Inv.x_fenetre_max
 
         if side == "<Down>":
-            if self.position[1]-self.speed > 0:
+            if self.position[1]-self.speed>0:
                 self.position[1] -= self.speed
             else:
                 self.position[1] = 0
-
+        
         if side == "<Up>":
-            if self.position[1]+self.speed < Sp_Inv.y_fenetre_max:
+            if self.position[1]+self.speed<Sp_Inv.y_fenetre_max:
                 self.position[1] += self.speed
             else:
                 self.position[1] = Sp_Inv.y_fenetre_max
