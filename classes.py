@@ -58,19 +58,22 @@ class Entity():
         elif nb == 1:
             self.direction_tir = "down"
 
+    
+
 
 class Player(Entity):
-    def deplacement_player(self,event): # side = gauche ou droite
+    
+    def deplacement_player(self, event):  # side = gauche ou droite
         side = event.keysym
 
         if side == "<Left>":
-            if self.position[0]-self.speed>0:
+            if self.position[0]-self.speed > 0:
                 self.position[0] -= self.speed
             else:
                 self.position[0] = 0
-        
+
         if side == "<Right>":
-            if self.position[0]+self.speed<Sp_Inv.x_fenetre_max:
+            if self.position[0]+self.speed < Sp_Inv.x_fenetre_max:
                 self.position[0] += self.speed
             else:
                 self.position[0] = Sp_Inv.x_fenetre_max

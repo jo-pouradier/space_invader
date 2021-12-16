@@ -38,6 +38,8 @@ class main_view(tk.Frame):
         bouton_new_game.grid(row=0, column=3, sticky='e')
         main_view.centrage(self)
 
+        player = cv.create_rectangle(20, 20, 40, 40)
+
     def centrage(self):
         '''
         centrage
@@ -56,9 +58,6 @@ class main_view(tk.Frame):
         positionY = screenY//2-(screenY*0.9)//2
         self.master.geometry(
             "{}x{}+{}+{}".format(int(screenX*0.9), int(screenY*0.9), int(positionX), int(positionY)))
-    
-    
-
 
 
 if __name__ == "__main__":
