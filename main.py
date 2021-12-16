@@ -1,8 +1,20 @@
 import tkinter as tk
-from typing import Collection
+import classes as cl
 
 
 class main_view(tk.Frame):
+    '''
+    main_view
+    dev: Joseph
+    date: 2021-12-16 09:54:25
+
+    Description:
+    Cree la fenetre principale du jeu space invader, avec ses proporiété
+
+    Parametres:
+        tk [tk] : cree une frame tkinter dans la page principale
+    '''
+
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
 
@@ -49,5 +61,6 @@ class main_view(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     window = main_view(root)
+    window.configure(highlightbackground='yellow', highlightthickness=2)
     window.pack(side="top", fill="both", expand=True)
     root.mainloop()
