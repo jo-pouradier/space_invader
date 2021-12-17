@@ -50,12 +50,12 @@ class main_view(tk.Frame):
         Parametres:
             self [Frame] : c'est une frame tkinter 
         '''
-        screenX = self.master.winfo_screenwidth()
-        screenY = self.master.winfo_screenheight()
-        positionX = screenX//2-(screenX*0.9)//2
-        positionY = screenY//2-(screenY*0.9)//2
+        self.sizeX = self.master.winfo_screenwidth()*0.9
+        self.sizeY = self.master.winfo_screenheight()*0.9
+        positionX = self.master.winfo_screenwidth()/2-(self.sizeX)/2
+        positionY = self.master.winfo_screenheight()/2-(self.sizeY)/2
         self.master.geometry(
-            "{}x{}+{}+{}".format(int(screenX*0.9), int(screenY*0.9), int(positionX), int(positionY)))
+            "{}x{}+{}+{}".format(int(self.sizeX), int(self.sizeY), int(positionX), int(positionY)))
 
 
 if __name__ == "__main__":
@@ -63,12 +63,12 @@ if __name__ == "__main__":
     window = main_view(root)
     window.configure(highlightbackground='yellow', highlightthickness=2)
     window.pack(side="top", fill="both", expand=True)
-    player_carré = window.cv.create_rectangle(20, 20, 40, 40)
 
-    player = cl.Player(lives=3, img='images/vaisseau_player.png')
-    player.placement([(int(window.winfo_width())/2),
-                     (int(window.winfo_height())/2)])
+    #creation du joueur
+    player = cl.Player(lives=3, img='images/vaisseau_player.png',
+                       position=[window.sizeX/2, window.sizeY/2])
+    player.placement([window.sizeX/2, window.sizeY/2])
     player.create(window.cv)
-    #sp_inv=cl.Space_invaders(canvas=window.cv, player=player,x_max=window.winfo_width(), y_max=window.winfo_height())
+
 
     root.mainloop()
