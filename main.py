@@ -48,7 +48,7 @@ class main_view(tk.Frame):
         centre la fenetre tkinter sur l'ecran de l'utilisateur
 
         Parametres:
-            self [Frame] : c'est une frame tkinter 
+            self [Frame] : c'est une frame tkinter
         '''
         self.sizeX = self.master.winfo_screenwidth()*0.9
         self.sizeY = self.master.winfo_screenheight()*0.9
@@ -63,12 +63,15 @@ if __name__ == "__main__":
     window = main_view(root)
     window.configure(highlightbackground='yellow', highlightthickness=2)
     window.pack(side="top", fill="both", expand=True)
-
-    #creation du joueur
+    # creation du joueur
     player = cl.Player(lives=3, img='images/vaisseau_player.png',
-                       position=[window.sizeX/2, window.sizeY/2])
+                       position=[window.sizeX/2, window.sizeY/2], canvas=window.cv)
     player.placement([window.sizeX/2, window.sizeY/2])
     player.create(window.cv)
 
+    # mouvement du joueur
+    player.speed = 50
+    window.cv.focus_set()
+    window.cv.bind('<Key>', player.deplacement_player)
 
     root.mainloop()

@@ -23,6 +23,7 @@ class Space_invaders():
         self.y_fentre_max = y_max
 
 
+# utile??
 Sp_Inv = Space_invaders("myWindow", "player", 300, 300)  # initialisation test
 
 
@@ -36,7 +37,7 @@ class Entity():
     Classe de position des entitées du jeu
     '''
 
-    def __init__(self, lives, speed=1, position=[0, 0], img="",):
+    def __init__(self, lives, canvas, speed=1, position=[0, 0], img=""):
         # nombre de vies (3 pour le joueur et a definir pour les enemies)
         self.lives = lives
         self.position = position  # position sur la map
@@ -44,6 +45,7 @@ class Entity():
         self.border = 0  # désigne la ligne que le joueur ou le monstre ne peux pas dépasser
         self.speed = speed
         self.img = img
+        self.canvas = canvas
 
     def create(self, canvas):
         self.photo = tk.PhotoImage(file=self.img)
@@ -52,8 +54,8 @@ class Entity():
 
     def placement(self, position):  # positionne l'entité dur la map
         if len(position) == 2 and position[0] >= 0 and position[1] >= 0:
-
-            self.position.append(position)
+            self.position[0] = position[0]
+            self.position[1] = position[1]
         else:
             self.position.append([0, 0])
 
@@ -68,31 +70,34 @@ class Player(Entity):
 
     def deplacement_player(self, event):  # side = gauche ou droite
         side = event.keysym
-
-        if side == "<Left>":
+        print(side)
+        print(self.position)
+        if side == "Left":
             if self.position[0]-self.speed > 0:
                 self.position[0] -= self.speed
             else:
-                self.position[0] = 0
+                self.position[0] = self.position[0]
 
-        if side == "<Right>":
-            if self.position[0]+self.speed < Sp_Inv.x_fenetre_max:
+        if side == "Right":
+            if self.position[0]+self.speed < self.canvas.winfo_width():
                 self.position[0] += self.speed
             else:
-                self.position[0] = Sp_Inv.x_fenetre_max
+                self.position[0] = self.position[0]
 
-        if side == "<Up>":
-            if self.position[1]-self.speed > 0:
+        if side == "Up":
+            if self.position[1]-self.speed > 0+50:
                 self.position[1] -= self.speed
             else:
-                self.position[1] = 0
+                self.position[1] = self.position[1]
 
-        if side == "<Down>":
-            if self.position[1]+self.speed < Sp_Inv.y_fenetre_max:
+        if side == "Down":
+            if self.position[1]+self.speed < self.canvas.winfo_height()-50:
                 self.position[1] += self.speed
             else:
-                self.position[1] = Sp_Inv.y_fenetre_max
+                self.position[1] = self.position[1]
         print(self.position)
+        print(self.__dict__)
+        self.canvas.coords(self.form, self.position[0], self.position[1])
 
 
 class Monster(Entity):
@@ -126,5 +131,5 @@ class Monster(Entity):
 
 if __name__ == '__main__':
     player = Player(3, "vaisseau_player.jpg")
-    monster = Monster(3, 10, [300, Sp_Inv.y_fentre_max])
+    monster = Monster(lives=3, speed=10, position=[300, Sp_Inv.y_fentre_max])
     monster.deplacement_monstre()
