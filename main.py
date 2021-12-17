@@ -75,7 +75,7 @@ if __name__ == "__main__":
     window.cv.bind('<Key>', player.deplacement_player)
     window.cv.bind('<space>', player.shoot)
     player.name = 'player'
-    root.after(20, player.deplacement_bullet)
-    print(len(player.bullet))
+    player.deplacement_bullet()
+    player.suppr_bullet()
 
     root.mainloop()

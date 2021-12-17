@@ -46,7 +46,7 @@ class Entity():
         self.speed = speed
         self.img = img
         self.canvas = canvas
-        self.bullet = []
+        self.bullets = {}
 
     def create(self, canvas):
         self.photo = tk.PhotoImage(file=self.img)
@@ -68,25 +68,35 @@ class Entity():
 
     def shoot(self, event):
         key = event.keysym
-        print(key)
-
         if key == 'space':
-            self.bullet.append(self.canvas.create_oval(
-                self.position[0]-5, self.position[1]-5, self.position[0]+5, self.position[1]+5, fill='green'))
+            self.bullets[(self.canvas.create_oval(
+                self.position[0]-5, self.position[1]-5, self.position[0]+5, self.position[1]+5, fill='green'))] = [self.position[0], self.position[1]]
 
         else:
-            self.bullet.append(self.canvas.create_oval(
+            self.bullets.append(self.canvas.create_oval(
                 self.position[0]-5, self.position[1]-5, self.position[0]+5, self.position[1]+5, fill='red'))
 
     def deplacement_bullet(self):
-        for bullet in self.bullet:
-            print(bullet)
+        for bullet in self.bullets.keys():
             if self.name == 'player':
-                x = -100
+                self.bullets[bullet][1] -= 5
             else:
-                x = 100
+                self.bullets[bullet][1] += 5
             self.canvas.coords(
-                bullet, self.position[0]-5+x, self.position[1]-5, self.position[0]+5+x, self.position[1]+5)
+                bullet, self.bullets[bullet][0]-5, self.bullets[bullet][1]-5, self.bullets[bullet][0]+5, self.bullets[bullet][1]+5)
+        self.canvas.after(20, self.deplacement_bullet)
+
+    def suppr_bullet(self):
+        list_suppr = []
+        # A FAIRE
+        # il faut faire la difference pour player et monster
+        for bullet in self.bullets.keys():
+            if self.bullets[bullet][1] < 200:
+                list_suppr.append(bullet)
+        for b in list_suppr:
+            self.canvas.delete(b)
+            self.bullets.pop(b)
+        self.canvas.after(20, self.suppr_bullet)
 
 
 class Player(Entity):
