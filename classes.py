@@ -46,6 +46,7 @@ class Entity():
         self.speed = speed
         self.img = img
         self.canvas = canvas
+        self.bullet = []
 
     def create(self, canvas):
         self.photo = tk.PhotoImage(file=self.img)
@@ -59,11 +60,33 @@ class Entity():
         else:
             self.position.append([0, 0])
 
-    def shoot(self, nb):  # nb=0 pour le player et nb=1 pour les monstres
-        if nb == 0:
-            self.direction_tir = "up"
-        elif nb == 1:
-            self.direction_tir = "down"
+    # def shoot(self, nb):  # nb=0 pour le player et nb=1 pour les monstres
+    #     if nb == 0:
+    #         self.direction_tir = 'up'
+    #     elif nb == 1:
+    #         self.direction_tir = "down"
+
+    def shoot(self, event):
+        key = event.keysym
+        print(key)
+
+        if key == 'space':
+            self.bullet.append(self.canvas.create_oval(
+                self.position[0]-5, self.position[1]-5, self.position[0]+5, self.position[1]+5, fill='green'))
+
+        else:
+            self.bullet.append(self.canvas.create_oval(
+                self.position[0]-5, self.position[1]-5, self.position[0]+5, self.position[1]+5, fill='red'))
+
+    def deplacement_bullet(self):
+        for bullet in self.bullet:
+            print(bullet)
+            if self.name == 'player':
+                x = -100
+            else:
+                x = 100
+            self.canvas.coords(
+                bullet, self.position[0]-5+x, self.position[1]-5, self.position[0]+5+x, self.position[1]+5)
 
 
 class Player(Entity):
@@ -71,7 +94,6 @@ class Player(Entity):
     def deplacement_player(self, event):  # side = gauche ou droite
         side = event.keysym
         print(side)
-        print(self.position)
         if side == "Left":
             if self.position[0]-self.speed > 0:
                 self.position[0] -= self.speed
@@ -95,7 +117,6 @@ class Player(Entity):
                 self.position[1] += self.speed
             else:
                 self.position[1] = self.position[1]
-        print(self.position)
         print(self.__dict__)
         self.canvas.coords(self.form, self.position[0], self.position[1])
 

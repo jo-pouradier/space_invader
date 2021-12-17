@@ -73,5 +73,9 @@ if __name__ == "__main__":
     player.speed = 50
     window.cv.focus_set()
     window.cv.bind('<Key>', player.deplacement_player)
+    window.cv.bind('<space>', player.shoot)
+    player.name = 'player'
+    root.after(20, player.deplacement_bullet)
+    print(len(player.bullet))
 
     root.mainloop()
