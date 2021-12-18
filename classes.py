@@ -25,6 +25,7 @@ class main_view(tk.Frame):
         info_frame.configure(highlightbackground='red', highlightthickness=2)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
+
         # canvas qui aura toutes les entitées du jeu.
         self.cv = tk.Canvas(self)
         self.cv.configure(highlightbackground='blue',

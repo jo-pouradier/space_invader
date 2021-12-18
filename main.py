@@ -1,5 +1,6 @@
 import tkinter as tk
 import classes as cl
+from PIL import Image, ImageTk
 
 
 if __name__ == "__main__":
@@ -8,6 +9,13 @@ if __name__ == "__main__":
     window = cl.main_view(root)
     window.configure(highlightbackground='yellow', highlightthickness=2)
     window.pack(side="top", fill="both", expand=True)
+    # creation du background
+    #background = tk.PhotoImage(file='images/background_space_3.png')
+    space_image = Image.open('images/background_space_1.png')
+    space_image_resize = space_image.resize(
+        (window.cv.winfo_width(), window.cv.winfo_height(), Image.ANTIALIAS)
+    background = ImageTk.PhotoImage(space_image_resize)
+    window.cv.create_image(0, 0, image=background, anchor='nw')
 
     # creation du joueur
     player = cl.Player(lives=3, img='images/vaisseau_player.png',
