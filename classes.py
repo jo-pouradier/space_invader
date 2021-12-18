@@ -1,6 +1,7 @@
 from random import *
 import tkinter as tk
 import time
+from PIL import Image, ImageTk
 
 
 class main_view(tk.Frame):
@@ -59,6 +60,7 @@ class main_view(tk.Frame):
         positionY = self.master.winfo_screenheight()/2-(self.sizeY)/2
         self.master.geometry(
             "{}x{}+{}+{}".format(int(self.sizeX), int(self.sizeY), int(positionX), int(positionY)))
+
 # pas sur qu'elle soit utile
 
 # class Space_invaders():
@@ -130,7 +132,7 @@ class Entity():
         date: 2021-12-17 23:31:43
 
         Description:
-        Creation des bullets en fonction de l'event <space>, pour le player, et par rien pour les monstres. 
+        Creation des bullets en fonction de l'event <space>, pour le player, et par rien pour les monstres.
         On met dans un dictionnaire l'objet tkinter (oval) et sa position ( par rapport en l'envoyeur).
 
         Parametres:
@@ -173,7 +175,7 @@ class Entity():
         date: 2021-12-17 23:35:25
 
         Description:
-        On parcours la liste des bullets, on enregistres celles qui sortent dee la fenetre, 
+        On parcours la liste des bullets, on enregistres celles qui sortent dee la fenetre,
         puis on les suprimes du canvas et du dictionnaire.
         '''
 
