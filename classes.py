@@ -229,13 +229,13 @@ class Player(Entity):
                 self.position[0] = self.position[0]
 
         if side == "Up":
-            if self.position[1]-self.speed > 0+50:
+            if self.position[1]-self.speed > 0+45:
                 self.position[1] -= self.speed
             else:
                 self.position[1] = self.position[1]
 
         if side == "Down":
-            if self.position[1]+self.speed < self.canvas.winfo_height()-50:
+            if self.position[1]+self.speed < self.canvas.winfo_height():
                 self.position[1] += self.speed
             else:
                 self.position[1] = self.position[1]
