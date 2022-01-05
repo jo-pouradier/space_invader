@@ -81,6 +81,7 @@ class main_view(tk.Frame):
             "{}x{}+{}+{}".format(int(self.sizeX), int(self.sizeY), int(positionX), int(positionY)))
 
     def new_background(self, img):
+        self.background_image = img
         self.space_image = Image.open(img)
         self.space_image = self.space_image.resize(
             (self.cv.winfo_width(), self.cv.winfo_height()), Image.ANTIALIAS)

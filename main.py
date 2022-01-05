@@ -29,5 +29,7 @@ if __name__ == "__main__":
     player.name = 'player'
     player.deplacement_bullet()
     player.suppr_bullet()
+    root.bind("<Motion>", lambda e: [window.new_background(
+        window.background_image), window.cv.tag_raise('player', 'background')])
 
     root.mainloop()
