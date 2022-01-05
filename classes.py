@@ -47,16 +47,16 @@ class main_view(tk.Frame):
         background_menu['menu'] = background_menu.menu
         background_menu.menu.add_command(
             label='Terre', command=lambda: [self.new_background('images/background_space_1.png'),
-                                            self.cv.tag_raise('player', 'background')])
+                                            self.cv.tag_lower('background')])
         background_menu.menu.add_command(
             label='Terre 2', command=lambda: [self.new_background('images/background_space_2.png'),
-                                              self.cv.tag_raise('player', 'background')])
+                                              self.cv.tag_lower('background')])
         background_menu.menu.add_command(
             label='Galaxy', command=lambda: [self.new_background('images/background_space_3.png'),
-                                             self.cv.tag_raise('player', 'background')])
+                                             self.cv.tag_lower('background')])
         background_menu.menu.add_command(
             label='Voie Lactée', command=lambda: [self.new_background('images/background_space_4.png'),
-                                                  self.cv.tag_raise('player', 'background')])
+                                                  self.cv.tag_lower('background')])
         background_menu.grid(row=0, column=2, sticky='esw')
 
         self.centrage()
@@ -135,9 +135,9 @@ class Entity():
         self.canvas = canvas
         self.bullets = {}
 
-    def create(self, canvas, tag):
+    def create(self, tag):
         self.photo = tk.PhotoImage(file=self.img)
-        self.form = canvas.create_image(
+        self.form = self.canvas.create_image(
             self.position[0], self.position[1], image=self.photo, tag=tag)
 
     # je crois pas quelle soit utile...
@@ -275,24 +275,37 @@ class Player(Entity):
 
 class Monster(Entity):
 
-    def deplacement_monstre(self):   # speed est un nombre de pixels
-        if self.position[0] == 0:
-            while self.position[0] != Sp_Inv.x_fenetre_max:
-                if self.position[0]+self.speed < Sp_Inv.x_fenetre_max:
-                    self.position[0] += self.speed
-                else:
-                    self.position[0] = Sp_Inv.x_fenetre_max
-                print(self.position)
-                time.sleep(1)
+    def deplacement_monstre(self, direction='r'):   # speed est un nombre de pixels
+        # if self.position[0] != 0:  # on est a x=0 (gauche)
+        #     while self.position[0] != self.canvas.winfo_width():
+        #         if self.position[0]+self.speed < self.canvas.winfo_width():
+        #             self.position[0] += self.speed
+        #         else:
+        #             self.position[0] = self.canvas.winfo_width()
+        #         # print(self.position)
+        #         time.sleep(1)
 
-        if self.position[0] == Sp_Inv.x_fenetre_max:
-            while self.position[0] != 0:
-                if self.position[0]-self.speed > 0:
-                    self.position[0] -= self.speed
-                else:
-                    self.position[0] = 0
-                print(self.position)
-                time.sleep(1)
+        # if self.position[0] != self.canvas.winfo_width():
+        #     while self.position[0] != 0:
+        #         if self.position[0]-self.speed > 0:
+        #             self.position[0] -= self.speed
+        #         else:
+        #             self.position[0] = 0
+        #         print(self.position)
+        #         time.sleep(1)
+        # self.canvas.coords(self.form, self.position[0], self.position[1])
+        # self.canvas.after(20, self.deplacement_monstre)
+
+        if self.position[0] < self.canvas.winfo_width()-50 and direction == 'r':
+            self.position[0] += self.speed
+        elif self.position[0] >= self.canvas.winfo_width()-50 and direction == 'r':
+            direction = 'l'
+        elif self.position[0] > 0+50 and direction == 'l':
+            self.position[0] -= self.speed
+        elif self.position[0] <= 0+50 and direction == 'l':
+            direction = 'r'
+        self.canvas.coords(self.form, self.position[0], self.position[1])
+        self.canvas.after(10, lambda: self.deplacement_monstre(direction))
 
     # def shoot(self, nb):  # nb=0 pour le player et nb=1 pour les monstres
     #     if nb == 0:
