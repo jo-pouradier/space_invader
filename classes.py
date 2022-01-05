@@ -61,6 +61,15 @@ class main_view(tk.Frame):
         self.master.geometry(
             "{}x{}+{}+{}".format(int(self.sizeX), int(self.sizeY), int(positionX), int(positionY)))
 
+    def new_background(self, img):
+        self.space_image = Image.open(img)
+        self.space_image = self.space_image.resize(
+            (self.cv.winfo_width(), self.cv.winfo_height()), Image.ANTIALIAS)
+        self.background_resize = ImageTk.PhotoImage(self.space_image)
+        self.background = self.cv.create_image(
+            0, 0, image=self.background_resize, anchor='nw')
+
+
 # pas sur qu'elle soit utile
 
 # class Space_invaders():

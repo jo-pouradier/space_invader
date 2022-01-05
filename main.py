@@ -11,11 +11,7 @@ if __name__ == "__main__":
     window.pack(side="top", fill="both", expand=True)
     # creation du background
     window.update_idletasks()
-    space_image = Image.open('images/background_space_3.png')
-    space_image_resize = space_image.resize(
-        (window.cv.winfo_width(), window.cv.winfo_height()), Image.ANTIALIAS)
-    background_resize = ImageTk.PhotoImage(space_image_resize)
-    window.cv.create_image(0, 0, image=background_resize, anchor='nw')
+    window.new_background('images/background_space_2.png')
 
     # creation du joueur
     player = cl.Player(lives=3, img='images/vaisseau_player.png',
