@@ -11,12 +11,12 @@ if __name__ == "__main__":
     window.pack(side="top", fill="both", expand=True)
     # creation du background
     window.update_idletasks()
-    window.new_background('images/background_space_2.png')
+    window.new_background('images/background_space_3.png')
 
     # creation du joueur
     player = cl.Player(lives=3, img='images/vaisseau_player.png',
                        position=[window.sizeX/2, window.sizeY*0.75], canvas=window.cv)
-    player.create(window.cv)
+    player.create(window.cv, tag='player')
 
     # mouvement du joueur
     player.speed = 50  # la ca va vite en vrai pour un debut de jeu

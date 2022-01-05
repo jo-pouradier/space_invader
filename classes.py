@@ -35,10 +35,29 @@ class main_view(tk.Frame):
 
         bouton_quitter = tk.Button(
             info_frame, text='Quitter', fg='black', command=self.master.destroy)
-        bouton_quitter.grid(row=0, column=4, sticky='e')
+        bouton_quitter.grid(row=0, column=4, sticky='ensw')
         bouton_new_game = tk.Button(
             info_frame, text='New Game', fg='black', command=None)
-        bouton_new_game.grid(row=0, column=3, sticky='e')
+        bouton_new_game.grid(row=0, column=3, sticky='ensw')
+
+        # ajout d'un boutton menu pour choisir le background
+        background_menu = tk.Menubutton(
+            info_frame, text='Background', fg='black')
+        background_menu.menu = tk.Menu(background_menu)
+        background_menu['menu'] = background_menu.menu
+        background_menu.menu.add_command(
+            label='Terre', command=lambda: [self.new_background('images/background_space_1.png'),
+                                            self.cv.tag_raise('player', 'background')])
+        background_menu.menu.add_command(
+            label='Terre 2', command=lambda: [self.new_background('images/background_space_2.png'),
+                                              self.cv.tag_raise('player', 'background')])
+        background_menu.menu.add_command(
+            label='Galaxy', command=lambda: [self.new_background('images/background_space_3.png'),
+                                             self.cv.tag_raise('player', 'background')])
+        background_menu.menu.add_command(
+            label='Voie Lactée', command=lambda: [self.new_background('images/background_space_4.png'),
+                                                  self.cv.tag_raise('player', 'background')])
+        background_menu.grid(row=0, column=2, sticky='esw')
 
         self.centrage()
 
@@ -67,7 +86,7 @@ class main_view(tk.Frame):
             (self.cv.winfo_width(), self.cv.winfo_height()), Image.ANTIALIAS)
         self.background_resize = ImageTk.PhotoImage(self.space_image)
         self.background = self.cv.create_image(
-            0, 0, image=self.background_resize, anchor='nw')
+            0, 0, image=self.background_resize, anchor='nw', tag='background')
 
 
 # pas sur qu'elle soit utile
@@ -115,10 +134,10 @@ class Entity():
         self.canvas = canvas
         self.bullets = {}
 
-    def create(self, canvas):
+    def create(self, canvas, tag):
         self.photo = tk.PhotoImage(file=self.img)
         self.form = canvas.create_image(
-            self.position[0], self.position[1], image=self.photo)
+            self.position[0], self.position[1], image=self.photo, tag=tag)
 
     # je crois pas quelle soit utile...
     def placement(self, position):  # positionne l'entité dur la map
@@ -152,7 +171,7 @@ class Entity():
         # on passe par l'event (<space>) pour le player et par rien pour les monstres.
         if key == 'space':
             self.bullets[(self.canvas.create_oval(
-                self.position[0]-5, self.position[1]-5, self.position[0]+5, self.position[1]+5, fill='green'))] = [self.position[0], self.position[1]]
+                self.position[0]-5, self.position[1]-5, self.position[0]+5, self.position[1]+5, fill='green', tag='bullet'))] = [self.position[0], self.position[1]]
 
         else:
             self.bullets[(self.canvas.create_oval(
@@ -174,7 +193,8 @@ class Entity():
             else:
                 self.bullets[bullet][1] += 5
             self.canvas.coords(
-                bullet, self.bullets[bullet][0]-5, self.bullets[bullet][1]-5, self.bullets[bullet][0]+5, self.bullets[bullet][1]+5)
+                bullet, self.bullets[bullet][0]-5, self.bullets[bullet][1]-5,
+                self.bullets[bullet][0]+5, self.bullets[bullet][1]+5)
         self.canvas.after(20, self.deplacement_bullet)
 
     def suppr_bullet(self):
@@ -282,5 +302,6 @@ class Monster(Entity):
 
 if __name__ == '__main__':
     player = Player(3, "vaisseau_player.jpg")
-    monster = Monster(lives=3, speed=10, position=[300, Sp_Inv.y_fentre_max])
+    monster = Monster(lives=3, speed=10, position=[
+        300, Sp_Inv.y_fentre_max])
     monster.deplacement_monstre()
