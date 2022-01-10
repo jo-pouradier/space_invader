@@ -357,6 +357,12 @@ class Entity(World):
             ):
                 list_suppr.append(ennemi)
                 ennemi.lives -= 1  # on a la balle en 0 et l'ennemi en 1
+
+        """
+        Faut il mieux return la list_suppr???
+        et tt suppr dans la class world?
+        """
+
         if list_suppr != []:
             try:
                 for element in list_suppr:
