@@ -1,4 +1,4 @@
-from random import *
+import random
 import tkinter as tk
 import time
 from PIL import Image, ImageTk
@@ -38,7 +38,7 @@ class main_view(tk.Frame):
         )
         bouton_quitter.grid(row=0, column=4, sticky="ensw")
         bouton_new_game = tk.Button(
-            info_frame, text="New Game", fg="black", command=None
+            info_frame, text="New Game", fg="black", command=self.new_game
         )
         bouton_new_game.grid(row=0, column=3, sticky="ensw")
 
@@ -111,6 +111,9 @@ class main_view(tk.Frame):
             0, 0, image=self.background_resize, anchor="nw", tag="background"
         )
 
+    def new_game(self):
+        os.execl(sys.executable, sys.executable, *sys.argv)
+
 
 # pas sur qu'elle soit utile
 
@@ -148,19 +151,6 @@ class World:
         )
         self.player.create(tag="player")
 
-        # self.monster = Monster(
-        #     "monster",
-        #     1,
-        #     self.canvas,
-        #     position=[self.canvas.winfo_width() / 4, 70],
-        #     img="images/vaisseau_enemy_3.png",
-        # )
-        # self.monster.create(tag="monster")
-        # self.canvas.tag_raise("monster")
-        # self.monster.deplacement_monstre()
-
-        # self.player.lives_minus(self.monster)
-        # self.monster.lives_minus(self.player)
         self.canvas.focus_set()
 
     def level_monster(self, lvl):
@@ -168,20 +158,41 @@ class World:
         x = self.canvas.winfo_width() / lvl
         self.list_monster = []
         for i in range(lvl):
-            monster = Monster(
+            self.monster = Monster(
                 "monster",
                 1,
                 self.canvas,
                 position=[x, 70],
                 img="images/vaisseau_enemy_3.png",
+                speed=10,
             )
-            monster.create(tag="monster")
-            self.list_monster.append(monster)
+            self.monster.direction = "r"
+            self.monster.create(tag="monster")
+            self.list_monster.append(self.monster)
             x += 150
-        
-    def moove_monsters(self):
-        #verifier celui de droite et celui de gauche pour choisir la direction
-        
+        self.fct_monsters()
+
+    def fct_monsters(self):
+        for monster in self.list_monster:
+            monster.deplacement_monstre()
+            monster.lives_minus(self.player)
+            monster.deplacement_bullet()
+            monster.suppr_bullet()
+        # print(self.canvas.find_all())
+        self.canvas.after(17, self.fct_monsters)
+
+    def fct_player(self):
+        self.player.deplacement_bullet()
+        self.player.suppr_bullet()
+        for monster in self.list_monster:
+            self.player.lives_minus(monster)
+        self.canvas.after(17, self.fct_player)
+
+    def shoot_monster(self):
+        rand = random.randint(0, len(self.list_monster) - 1)
+        shoot_monster = self.list_monster[rand]
+        shoot_monster.shoot(None)
+        self.canvas.after(self.lvl * 100, self.shoot_monster)
 
     def dead(self):
         if self.player.lives == 0:
@@ -192,16 +203,11 @@ class World:
                 os.execl(sys.executable, sys.executable, *sys.argv)
             elif restart.upper() == "NO":
                 sys.exit()
-        self.canvas.after(50, self.dead)
-
-    def player_shoot(self):
-        self.player.deplacement_bullet()
-        self.player.suppr_bullet()
-
-    def monster_shoot(self):
-        self.monster.shoot(None)
-        self.monster.deplacement_bullet()
-        self.monster.suppr_bullet()
+        for monster in self.list_monster:
+            if monster.lives == 0:
+                self.canvas.delete(monster.form)
+                monster.__del__()
+        self.canvas.after(40, self.dead)
 
 
 class Entity(World):
@@ -214,15 +220,11 @@ class Entity(World):
     Classe de position des entitées du jeu, regroupe toutes les données essentielles sur une entité du jeu.
     """
 
-    def __init__(self, name, lives, canvas, speed=1, position=[0, 0], img=""):
+    def __init__(self, name, lives, canvas, speed=10, position=[0, 0], img=""):
         # nombre de vies (3 pour le joueur et a definir pour les enemies)
         self.name = name
         self.lives = lives
         self.position = position  # position sur la map
-        self.damage = 1
-        self.border = (
-            0  # désigne la ligne que le joueur ou le monstre ne peux pas dépasser
-        )
         self.speed = speed
         self.img = img
         self.canvas = canvas
@@ -315,7 +317,7 @@ class Entity(World):
                 self.bullets[bullet][0] + 5,
                 self.bullets[bullet][1] + 5,
             )
-        self.canvas.after(20, self.deplacement_bullet)
+        # self.canvas.after(20, self.deplacement_bullet)
 
     def suppr_bullet(self):
         """
@@ -338,7 +340,7 @@ class Entity(World):
         for b in list_suppr:
             self.canvas.delete(b)
             self.bullets.pop(b)
-        self.canvas.after(20, self.suppr_bullet)
+        # self.canvas.after(20, self.suppr_bullet)
 
     def lives_minus(self, ennemi):
         list_suppr = []
@@ -353,19 +355,21 @@ class Entity(World):
                 <= self.bullets[b][1]
                 <= (ennemi.position[1] + 47.0)
             ):
-                list_suppr.append(b)
                 list_suppr.append(ennemi)
                 ennemi.lives -= 1  # on a la balle en 0 et l'ennemi en 1
         if list_suppr != []:
             try:
-                self.canvas.delete(list_suppr[0])
-                self.bullets.pop(list_suppr[0])
+                for element in list_suppr:
+                    self.canvas.delete(element)
+                ennemi.__del__()
+                print(list_suppr[1])
+
             except IndexError:
                 pass
-        try:
-            self.canvas.after(10, lambda: self.lives_minus(ennemi))
-        except Exception:
-            return
+        # try:
+        #     self.canvas.after(10, lambda: self.lives_minus(ennemi))
+        # except Exception:
+        #     return
 
 
 class Player(Entity):
@@ -382,6 +386,7 @@ class Player(Entity):
     """
 
     def __del__(self):
+        del self
         print("you lose")
 
     def deplacement_player(self, event):
@@ -446,19 +451,21 @@ class Monster(Entity):
         #         time.sleep(1)
         # self.canvas.coords(self.form, self.position[0], self.position[1])
         # self.canvas.after(20, self.deplacement_monstre)
-
-        if self.position[0] < self.canvas.winfo_width() - 50 and direction == "r":
+        if self.position[0] < self.canvas.winfo_width() - 50 and self.direction == "r":
             self.position[0] += self.speed
-        elif self.position[0] >= self.canvas.winfo_width() - 50 and direction == "r":
-            direction = "l"
-        elif self.position[0] > 0 + 50 and direction == "l":
+        elif (
+            self.position[0] >= self.canvas.winfo_width() - 50 and self.direction == "r"
+        ):
+            self.direction = "l"
+        elif self.position[0] > 0 + 50 and self.direction == "l":
             self.position[0] -= self.speed
-        elif self.position[0] <= 0 + 50 and direction == "l":
-            direction = "r"
+        elif self.position[0] <= 0 + 50 and self.direction == "l":
+            self.direction = "r"
         self.canvas.coords(self.form, self.position[0], self.position[1])
-        self.canvas.after(10, lambda: self.deplacement_monstre(direction))
+        # self.canvas.after(100, lambda: self.deplacement_monstre(direction))
 
     def __del__(self):
+        del self
         print("a monster has been deleted")
 
     # def shoot(self, nb):  # nb=0 pour le player et nb=1 pour les monstres
