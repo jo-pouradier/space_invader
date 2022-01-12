@@ -12,8 +12,6 @@ if __name__ == "__main__":
 
     # ---- CREATION DU MONDE ----
     world = cl.World(window.cv)
-    world.level_monster(5)
-    world.dead()
 
     # ----CREATION DES BIND----
     root.bind(
