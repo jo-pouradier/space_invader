@@ -23,28 +23,30 @@ class main_view(tk.Frame):
         self.configure(highlightbackground="yellow", highlightthickness=2)
         self.pack(side="top", fill="both", expand=True)
         # frame pour afficher les info du jeu : nbr de vie, score, boutons...
-        info_frame = tk.Frame(self)
-        info_frame.grid(row=0, column=0, sticky="nsew")
-        info_frame.configure(highlightbackground="red", highlightthickness=2)
+        self.info_frame = tk.Frame(self)
+        self.info_frame.grid(row=0, column=0, sticky="nsew")
+        self.info_frame.configure(highlightbackground="red", highlightthickness=2)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
         # canvas qui aura toutes les entitées du jeu.
         self.cv = tk.Canvas(self)
+        self.cv.focus_set()
         self.cv.configure(highlightbackground="blue", highlightthickness=2)
         self.cv.grid(row=1, column=0, sticky="nsew")
 
+        # creation des boutons
         bouton_quitter = tk.Button(
-            info_frame, text="Quitter", fg="black", command=self.master.destroy
+            self.info_frame, text="Quitter", fg="black", command=self.master.destroy
         )
-        bouton_quitter.grid(row=0, column=4, sticky="ensw")
+        bouton_quitter.grid(row=0, column=6, sticky="ensw")
         bouton_new_game = tk.Button(
-            info_frame, text="New Game", fg="black", command=self.new_game
+            self.info_frame, text="New Game", fg="black", command=self.new_game
         )
-        bouton_new_game.grid(row=0, column=3, sticky="ensw")
+        bouton_new_game.grid(row=0, column=5, sticky="ensw")
 
         # ajout d'un boutton menu pour choisir le background
-        background_menu = tk.Menubutton(info_frame, text="Background", fg="black")
+        background_menu = tk.Menubutton(self.info_frame, text="Background", fg="black")
         background_menu.menu = tk.Menu(background_menu)
         background_menu["menu"] = background_menu.menu
         background_menu.menu.add_command(
@@ -75,8 +77,42 @@ class main_view(tk.Frame):
                 self.cv.tag_lower("background"),
             ],
         )
-        background_menu.grid(row=0, column=2, sticky="esw")
+        background_menu.grid(row=0, column=4, sticky="esw")
+
         self.centrage()
+
+        # creation du background
+        self.cv.update_idletasks()
+        self.new_background("images/background_space_3.png")
+        self.world = World(self.cv)
+        self.label_info()
+
+        # bind des touches de commandes
+        self.cv.master.bind(
+            "r",
+            lambda: [
+                self.cv.new_background(self.cv.background_image),
+                self.cv.cv.tag_lower("background"),
+            ],
+        )
+        self.cv.bind("<Key>", self.world.player.deplacement_player)
+        self.cv.bind("<space>", self.world.player.shoot)
+
+        self.multi_fct()
+
+    def label_info(self):
+        self.label_score = tk.Label(
+            self.info_frame, text="score: " + str(self.world.player.score) + " ."
+        )
+        self.label_lives = tk.Label(
+            self.info_frame, text="vie: " + str(self.world.player.lives) + " ."
+        )
+        self.label_lvl = tk.Label(
+            self.info_frame, text="level: " + str(self.world.lvl) + " ."
+        )
+        self.label_lives.grid(row=0, column=1, sticky="nsew")
+        self.label_lvl.grid(row=0, column=2, sticky="nsew")
+        self.label_score.grid(row=0, column=3, sticky="nsew")
 
     def centrage(self):
         """
@@ -114,6 +150,15 @@ class main_view(tk.Frame):
     def new_game(self):
         os.execl(sys.executable, sys.executable, *sys.argv)
 
+    def multi_fct(self):
+        self.world.creation_lvl()
+        self.world.fct_monster()
+        self.world.fct_player()
+        self.world.dead()
+        self.label_info()
+
+        self.cv.after(17, self.multi_fct)
+
 
 class World:
     def __init__(self, canvas):
@@ -126,25 +171,23 @@ class World:
             canvas=self.canvas,
         )
         self.player.create(tag="player")
-        self.lvl = 1
+        self.player.score = 0
+        self.lvl = 0
         self.list_monster = []
-        self.canvas.focus_set()
-        self.creation_lvl()
         self.shoot_monster()
 
     def creation_lvl(self):
-        if self.list_monster == [] and self.lvl < 5:
+        if self.list_monster == []:
             self.level_monster(self.lvl, 70)
             self.lvl += 1
-        if self.list_monster == []:
-            for i in range(int(self.lvl / 5)):
-                self.level_monster(self.lvl - (i + 1) * 5, i * 140 + 70)
+        if self.list_monster == [] and self.lvl > 5:
+            # on affiche les monstres par rangée de 5
+            for i in range(self.lvl // 5):
+                if i == 0:
+                    self.level_monster(self.lvl // 5, 70)
+                else:
+                    self.level_monster(5, (i + 1) * 140 + 70)
             self.lvl += 1
-        # on lance les fonctions liers a player et a monster
-        self.fct_monster()
-        self.fct_player()
-        self.dead()
-        self.canvas.after(17, self.creation_lvl)
 
     def level_monster(self, lvl, posy):
         x = self.canvas.winfo_width() / (lvl + 1)
@@ -153,7 +196,7 @@ class World:
                 "monster",
                 int(lvl / 2 + 1),
                 self.canvas,
-                lvl * 3,
+                lvl * 5,
                 position=[x, posy],
                 img="images/vaisseau_enemy_3.png",
             )
@@ -189,16 +232,21 @@ class World:
                 self.list_monster.remove(monster)
                 for b in monster.bullets:
                     self.canvas.delete(b)
+                self.player.score += 10
         if self.player.lives <= 0:
             self.canvas.delete(self.player.form)
-            restart = messagebox.askquestion("Rejouer ?", "Voulez vous rejouer? ")
+            restart = messagebox.askquestion(
+                "Perdu",
+                "Votre score est de : "
+                + str(self.player.score)
+                + " points. Voulez vous rejouer? ",
+            )
             if restart.upper() == "YES":
                 os.execl(sys.executable, sys.executable, *sys.argv)
             elif restart.upper() == "NO":
                 sys.exit()
         # on lance la fct qui enleve des vies aux entité
         self.lives_minus()
-        # self.canvas.after(10, self.dead)
 
     def lives_minus(self):  # faut changer le nom de cette fct
         for monster in self.list_monster:
@@ -230,7 +278,7 @@ class World:
         return bullet_suppr
 
 
-class Entity(World):
+class Entity:
     """
     Entity
     dev: Adrien
