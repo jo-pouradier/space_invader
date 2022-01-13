@@ -5,4 +5,5 @@ if __name__ == "__main__":
     # ---- WINDOW ----
     root = tk.Tk()
     window = cl.MainView(root)
+ 
     root.mainloop()

@@ -162,9 +162,12 @@ class MainView(tk.Frame):
 
 
 class World:
-    def __init__(self, canvas,main_view):
+    def __init__(self, canvas):
         self.canvas = canvas
-        self.main_view = main_view
+        self.lvl = 0
+        self.list_monster = []
+        self.list_asteroide = []
+        # self.main_view = main_view
         self.player = Player(
             "player",
             lives=3,
@@ -176,21 +179,20 @@ class World:
         self.canvas.focus_set()
 
 
-        self.score = 0
-        self.create_obstacle()
-        self.score_printed = tk.StringVar()
-        label_score = tk.Label(
-            self.main_view.info_frame, textvariable=self.score_printed, fg="black"
-        )
-        label_score.grid(row=0, column=5, sticky="ensw")
-        self.score_printed.set("Score : "+str(self.score))
+        #self.score = 0
+        # self.score_printed = tk.StringVar()
+        # label_score = tk.Label(
+        #     self.main_view.info_frame, textvariable=self.score_printed, fg="black"
+        # )
+        # label_score.grid(row=0, column=5, sticky="ensw")
+        # self.score_printed.set("Score : "+str(self.score))
 
-        self.lives_printed = tk.StringVar()
-        label_lives = tk.Label(
-            self.main_view.info_frame, textvariable=self.lives_printed, fg="black"
-        )
-        label_lives.grid(row=0, column=6, sticky="ensw")
-        self.lives_printed.set("     Lives : "+str(self.player.lives))
+        # self.lives_printed = tk.StringVar()
+        # label_lives = tk.Label(
+        #     self.main_view.info_frame, textvariable=self.lives_printed, fg="black"
+        # )
+        # label_lives.grid(row=0, column=6, sticky="ensw")
+        # self.lives_printed.set("     Lives : "+str(self.player.lives))
 
 
 
@@ -202,9 +204,14 @@ class World:
         self.shoot_monster()
 
     def creation_lvl(self):
+        if self.list_monster == [] and self.lvl ==4:
+            self.boss_stage()
+            self.lvl +=1
+
         if self.list_monster == []:
             self.level_monster(self.lvl, 70)
             self.lvl += 1
+            
         if self.list_monster == [] and self.lvl > 5:
             # on affiche les monstres par rangée de 5
             for i in range(self.lvl // 5):
@@ -228,8 +235,10 @@ class World:
             self.monster.direction = "r"
             self.monster.create(tag="monster")
             self.list_monster.append(self.monster)
+            self.list_asteroide.clear()
+            self.create_obstacle()
             x += 150
-        self.fct_monsters()
+        self.fct_monster()
         self.shoot_monster()
         self.fct_player()
        # self.boss_stage()
@@ -252,49 +261,51 @@ class World:
                 shoot_monster.shoot(None)
             except ValueError:
                 pass
-        self.canvas.after(int((self.lvl / 2 * 100)), self.shoot_monster)
+        self.canvas.after(int((self.lvl* 100)), self.shoot_monster)
 
-    # def boss_stage(self):
-    #     if self.list_monster == [] and self.monster.name == "monster":
-    #         x = self.canvas.winfo_width()
-    #         self.monster = Monster(
-    #             "Boss",
-    #             10,
-    #             self.canvas,
-    #             speed= 20,
-    #             position = [x, 40 ],
-    #             img="images/vaisseau_enemy_boss_1.png"
-    #         )
-    #     if self.monster.name == "Boss":
-    #         self.dead()
-    #     self.monster.direction = "r"
-    #     self.monster.create(tag="monster")
-    #     self.list_monster.append(self.monster)
-    #     self.canvas.after(20,self.boss_stage)
+    def boss_stage(self):
+        if self.list_monster == [] and self.lvl == 4 and self.monster.name == "monster":
+            x = self.canvas.winfo_width()
+            self.monster = Monster(
+                "Boss",
+                10,
+                self.canvas,
+                speed= 20,
+                position = [x, 40 ],
+                img="images/vaisseau_enemy_boss_1.png"
+            )
+        if self.monster.name == "Boss":
+            self.dead()
+        self.monster.direction = "r"
+        self.monster.create(tag="monster")
+        self.list_monster.append(self.monster)
+
 
     def create_obstacle(self):
         i = random.randint(1,3)
         print(i)
         x =  50   # self.canvas.winfo_width() / 3
-        y =  400   # self.canvas.winfo_height() / 2
-        self.photo_obstacle = tk.PhotoImage(file="images/obstacle_transparent.png")
+        y =  400   # self.canvas.winfo_height() / 2)
         for nb in range(i):
-            
-            self.canvas.create_image(
-                x, y, image=self.photo_obstacle
+            self.asteroide = Entity(
+                "asteroide",
+                1000,
+                self.canvas,
+                speed=0,
+                position=[x,y],
+                img="images/obstacle_transparent_v3.png"
             )
+            self.asteroide.create(tag="asteroide")
+            self.list_asteroide.append(self.asteroide)
             print('yes')
-            x +=300
+            x +=500
+
+
 
 
     def dead(self):
         for monster in self.list_monster:
             if monster.lives <= 0:
-                if self.monster.name=="monster":
-                    self.score += 15
-                elif self.monster.name=="Boss":
-                    self.score += 150
-                self.score_printed.set("Score : "+str(self.score))
                 
                 self.canvas.delete(monster.form)
                 self.list_monster.remove(monster)
@@ -325,11 +336,36 @@ class World:
                     self.canvas.delete(b)
                     self.player.bullets.pop(b)
             self.bullet_suppr = self.collision(monster.bullets, self.player)
-            
+
             if self.bullet_suppr != []:
                 for b in self.bullet_suppr:
                     self.canvas.delete(b)
                     monster.bullets.pop(b)
+
+
+
+            for asteroide in self.list_asteroide:
+                self.bullet_suppr = self.collision(self.player.bullets, asteroide)
+
+                if self.bullet_suppr != []:
+                    for b in self.bullet_suppr:
+                        self.canvas.delete(b)
+                        self.player.bullets.pop(b)
+                self.bullet_suppr = self.collision(monster.bullets, asteroide)
+
+                if self.bullet_suppr != []:
+                    for b in self.bullet_suppr:
+                        self.canvas.delete(b)
+                        monster.bullets.pop(b)
+
+
+
+
+
+        
+            
+
+
 
     def collision(self, bullets, entity):
         bullet_suppr = []
@@ -475,6 +511,10 @@ class Player(Entity):
     Parametres:
         Entity [class] : voir description de la class
     """
+    def __init__(self, name, lives, canvas, speed=40, position=[0, 0], img=""):
+        super().__init__(name, lives, canvas, speed=speed, position=position, img=img)
+        self.score = 0
+
 
     def deplacement_player(self, event):
         """
