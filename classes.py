@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 import os, sys
 
 
-class main_view(tk.Frame):
+class MainView(tk.Frame):
     """
     main_view
     dev: Joseph
@@ -23,9 +23,9 @@ class main_view(tk.Frame):
         self.configure(highlightbackground="yellow", highlightthickness=2)
         self.pack(side="top", fill="both", expand=True)
         # frame pour afficher les info du jeu : nbr de vie, score, boutons...
-        info_frame = tk.Frame(self)
-        info_frame.grid(row=0, column=0, sticky="nsew")
-        info_frame.configure(highlightbackground="red", highlightthickness=2)
+        self.info_frame = tk.Frame(self)
+        self.info_frame.grid(row=0, column=0, sticky="nsew")
+        self.info_frame.configure(highlightbackground="red", highlightthickness=2)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
@@ -35,16 +35,17 @@ class main_view(tk.Frame):
         self.cv.grid(row=1, column=0, sticky="nsew")
 
         bouton_quitter = tk.Button(
-            info_frame, text="Quitter", fg="black", command=self.master.destroy
+            self.info_frame, text="Quitter", fg="black", command=self.master.destroy
         )
         bouton_quitter.grid(row=0, column=4, sticky="ensw")
         bouton_new_game = tk.Button(
-            info_frame, text="New Game", fg="black", command=self.new_game
+            self.info_frame, text="New Game", fg="black", command=self.new_game
         )
         bouton_new_game.grid(row=0, column=3, sticky="ensw")
 
+
         # ajout d'un boutton menu pour choisir le background
-        background_menu = tk.Menubutton(info_frame, text="Background", fg="black")
+        background_menu = tk.Menubutton(self.info_frame, text="Background", fg="black")
         background_menu.menu = tk.Menu(background_menu)
         background_menu["menu"] = background_menu.menu
         background_menu.menu.add_command(
@@ -141,8 +142,9 @@ class main_view(tk.Frame):
 
 
 class World:
-    def __init__(self, canvas):
+    def __init__(self, canvas,main_view):
         self.canvas = canvas
+        self.main_view = main_view
         self.player = Player(
             "player",
             lives=3,
@@ -152,6 +154,26 @@ class World:
         )
         self.player.create(tag="player")
         self.canvas.focus_set()
+
+
+        self.score = 0
+        self.create_obstacle()
+        self.score_printed = tk.StringVar()
+        label_score = tk.Label(
+            self.main_view.info_frame, textvariable=self.score_printed, fg="black"
+        )
+        label_score.grid(row=0, column=5, sticky="ensw")
+        self.score_printed.set("Score : "+str(self.score))
+
+        self.lives_printed = tk.StringVar()
+        label_lives = tk.Label(
+            self.main_view.info_frame, textvariable=self.lives_printed, fg="black"
+        )
+        label_lives.grid(row=0, column=6, sticky="ensw")
+        self.lives_printed.set("     Lives : "+str(self.player.lives))
+
+
+
 
     def level_monster(self, lvl):
         self.lvl = lvl
@@ -173,6 +195,7 @@ class World:
         self.fct_monsters()
         self.shoot_monster()
         self.fct_player()
+       # self.boss_stage()
 
     def fct_monsters(self):
         for monster in self.list_monster:
@@ -193,11 +216,51 @@ class World:
             shoot_monster.shoot(None)
             self.canvas.after(self.lvl * 100, self.shoot_monster)
 
+    # def boss_stage(self):
+    #     if self.list_monster == [] and self.monster.name == "monster":
+    #         x = self.canvas.winfo_width()
+    #         self.monster = Monster(
+    #             "Boss",
+    #             10,
+    #             self.canvas,
+    #             speed= 20,
+    #             position = [x, 40 ],
+    #             img="images/vaisseau_enemy_boss_1.png"
+    #         )
+    #     if self.monster.name == "Boss":
+    #         self.dead()
+    #     self.monster.direction = "r"
+    #     self.monster.create(tag="monster")
+    #     self.list_monster.append(self.monster)
+    #     self.canvas.after(20,self.boss_stage)
+
+    def create_obstacle(self):
+        i = random.randint(1,3)
+        print(i)
+        x =  50   # self.canvas.winfo_width() / 3
+        y =  400   # self.canvas.winfo_height() / 2
+        self.photo_obstacle = tk.PhotoImage(file="images/obstacle_transparent.png")
+        for nb in range(i):
+            
+            self.canvas.create_image(
+                x, y, image=self.photo_obstacle
+            )
+            print('yes')
+            x +=300
+
+
     def dead(self):
         for monster in self.list_monster:
             if monster.lives <= 0:
+                if self.monster.name=="monster":
+                    self.score += 15
+                elif self.monster.name=="Boss":
+                    self.score += 150
+                self.score_printed.set("Score : "+str(self.score))
+                
                 self.canvas.delete(monster.form)
                 self.list_monster.remove(monster)
+                
                 for b in monster.bullets:
                     self.canvas.delete(b)
                 del monster
@@ -247,6 +310,7 @@ class World:
                 ):
                     bullet_suppr.append(b)
                     self.player.lives -= 1
+                    self.lives_printed.set("     Lives : "+str(self.player.lives))
             if bullet_suppr != []:
                 for b in bullet_suppr:
                     self.canvas.delete(b)

@@ -5,13 +5,13 @@ import classes as cl
 if __name__ == "__main__":
     # ----WINDOW----
     root = tk.Tk()
-    window = cl.main_view(root)
+    window = cl.MainView(root)
     # creation du background
     window.update_idletasks()
     window.new_background("images/background_space_3.png")
 
     # ---- CREATION DU MONDE ----
-    world = cl.World(window.cv)
+    world = cl.World(window.cv,window)
     world.level_monster(5)
     world.dead()
 
