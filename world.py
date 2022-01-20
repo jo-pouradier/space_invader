@@ -90,7 +90,7 @@ class World:
         self.canvas.after(int((self.lvl * 100)), self.shoot_monster)
 
     def boss_stage(self):
-        if self.list_monster == [] and self.lvl == 4 and self.monster.name == "monster":
+        if self.list_monster == [] and self.lvl == 4  and self.monster.name == "monster":
             x = self.canvas.winfo_width()
             self.monster = monster.Monster(
                 "Boss",
@@ -108,7 +108,8 @@ class World:
 
     def create_obstacle(self):
         i = random.randint(1, 3)
-        x = 50  # self.canvas.winfo_width() / 3
+        pile_coord = [100,600,1100]
+        random.shuffle(pile_coord)
         y = 400  # self.canvas.winfo_height() / 2)
         for nb in range(i):
             self.asteroide = entity.Entity(
@@ -116,12 +117,23 @@ class World:
                 1000,
                 self.canvas,
                 speed=0,
-                position=[x, y],
+                position=[pile_coord[-1], y],
                 img="images/obstacle_transparent_v3.png",
             )
             self.asteroide.create(tag="asteroide")
             self.list_asteroide.append(self.asteroide)
-            x += 500
+            self.depiler(pile_coord)
+
+    def pile_vide(self,pile):
+        if pile == []:
+            return True
+        else : 
+            return False
+
+    def depiler(self,pile):
+        if self.pile_vide(pile)==False:
+            pile.pop()
+
 
     def dead(self):
         for monster in self.list_monster:
