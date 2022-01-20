@@ -1,9 +1,9 @@
 import tkinter as tk
-import classes as cl
+import game
 
 if __name__ == "__main__":
     # ---- WINDOW ----
     root = tk.Tk()
-    window = cl.MainView(root)
+    window =game.MainView(root)
  
     root.mainloop()
