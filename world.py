@@ -43,7 +43,7 @@ class World:
     def creation_lvl(self):
         '''
         creation_lvl
-        dev: Joseph
+        dev: Joseph et Adrien
         date: 2022-01-20 18:40:28
 
         Description:
@@ -69,7 +69,7 @@ class World:
     def level_monster(self, lvl, posy):
         '''
         level_monster
-        dev: Joseph
+        dev: Joseph et Adrien
         date: 2022-01-20 18:41:39
 
         Description:
@@ -265,12 +265,13 @@ class World:
     def lives_minus(self):  # faut changer le nom de cette fct
         '''
         lives_minus
-    dev: Joseph et Adrien
+        dev: Joseph et Adrien
         date: 2022-01-20 18:52:30
 
         Description:
-        [description]
+        [permet de vérifier les collisions entre chaque type d'entité à chaque instant]
         '''
+        """collisions des balles du joueur avec les monstres et des balles des monstres avec le player"""
         for monster in self.list_monster:
             self.bullet_suppr = self.collision(self.player.bullets, monster)
             if self.bullet_suppr != []:
@@ -284,6 +285,7 @@ class World:
                     self.canvas.delete(b)
                     monster.bullets.pop(b)
 
+            """collisions des balles des monstres et du player avec les asteroides"""
             for asteroide in self.list_asteroide:
                 self.bullet_suppr = self.collision(
                     self.player.bullets, asteroide)
@@ -300,6 +302,20 @@ class World:
                         monster.bullets.pop(b)
 
     def collision(self, bullets, entity):
+        '''
+        collision
+        dev: Adrien et Joseph
+        date: 2022-01-20 19:15:06
+
+        Description:
+        calcule si il y a collision entre une balle et une autre entité (peut import la provenance de la balle)
+
+        Parametres:
+            bullets [dictionnaire] : dico contenant les balles et leurs coordonnées
+            entity [class : entity] : le player ou un monstre ou un asteroide
+        Returns:
+            [list] : la liste des balles à supprimer
+        '''
         bullet_suppr = []
         for b in bullets.keys():
             if (

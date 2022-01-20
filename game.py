@@ -145,6 +145,17 @@ class MainView(tk.Frame):
         )
 
     def new_background(self, img):
+        '''
+        new_background
+        dev: Joseph et Adrien
+        date: 2022-01-20 19:22:48
+
+        Description:
+        permet de changer le background du canvas
+
+        Parametres:
+            img [chemin d'accès] : chemin d'accès à l'image
+        '''
         self.background_image = img
         self.space_image = Image.open(img)
         self.space_image = self.space_image.resize(

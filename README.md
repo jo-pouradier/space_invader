@@ -8,11 +8,21 @@ utilisation des commandes suivantes dans le terminal (macos et windows) pour ins
 
 POUR JOUER:
     lancer le fichier main.
-    on se déplace grace aux flèches directionnel, on tire avec la bar espace.
+    on se déplace grace aux flèches directionnelles, on tire avec la barre espace.
 
 OPTIONS:
     posibilité de changer le fond d'écran grace au menu déroulant ( "Background" ).
-    si on change la taille de la fenètre (plus grand ou plus petit), il faut redimensionner le background grace à la touch "r" (resize).
+    Si on change la taille de la fenêtre (plus grande ou plus petite), il faut redimensionner le background grâce à la touch "r" (resize).
+
+IMPLEMENTATION:
+    De nombreuses listes sont utilisées : pour stocker les balles à supprimer  notament dans le fichier world.py ou encore pour stocker les entités monster ou asteroides dans le fichier world.py.
+    Une pile : permet de stocker les coordonnées des positions potentielles des asteroides dans le fchier world.py.
+
+FONCTIONNALITES:
+    Une création pseudo-aléatoire d'astéroides sur la carte.
+    Une difficulé qui augmente avec le nombre de vagues.
+    Un boss qui apparaît à certaines vagues.
+    
 
 
 

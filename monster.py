@@ -5,7 +5,7 @@ class Monster(entity.Entity):
     def deplacement_monstre(self):
         '''
         deplacement_monstre
-        dev: Joseph
+        dev: Adrien et Joseph
         date: 2022-01-20 18:31:36
 
         Description:

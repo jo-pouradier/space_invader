@@ -21,6 +21,17 @@ class Entity:
         self.bullets = {}
 
     def create(self, tag):
+        '''
+        create
+        dev: Joseph et Adrien
+        date: 2022-01-20 19:19:12
+
+        Description:
+        créer une image sur le canvas à la position de l'entité mise en attribut
+
+        Parametres:
+            tag [attribut] : monstre ou Boss ou asteroide
+        '''
         self.photo = tk.PhotoImage(file=self.img)
         self.form = self.canvas.create_image(
             self.position[0], self.position[1], image=self.photo, tag=tag
