@@ -7,6 +7,7 @@ utilisation des commandes suivantes dans le terminal (macos et windows) pour ins
     python3 -m pip install --upgrade Pillow
 
 GIT:
+    https://github.com/jo-pouradier/space_invader.git
 
 POUR JOUER:
     lancer le fichier main.
@@ -24,7 +25,7 @@ FONCTIONNALITES:
     Une création pseudo-aléatoire d'astéroides sur la carte.
     Une difficulé qui augmente avec le nombre de vagues.
     Un boss qui apparaît à certaines vagues.
-    
+
 
 
 
