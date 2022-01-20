@@ -6,7 +6,17 @@ from tkinter import messagebox
 import os
 import sys
 
+
 class World:
+    '''
+    World
+    dev: Adrien et Joseph
+    date: 2022-01-20 18:38:29
+
+    Description:
+    Classe qui represente tout les objets du canvas.
+    '''
+
     def __init__(self, canvas):
         self.canvas = canvas
         self.lvl = 0
@@ -31,6 +41,14 @@ class World:
         self.shoot_monster()
 
     def creation_lvl(self):
+        '''
+        creation_lvl
+        dev: Joseph
+        date: 2022-01-20 18:40:28
+
+        Description:
+        Fonction qui cree les monstres (de la classe Monster en fonction du level de la partie.
+        '''
         if self.list_monster == [] and self.lvl == 4:
             self.boss_stage()
             self.lvl += 1
@@ -49,6 +67,18 @@ class World:
             self.lvl += 1
 
     def level_monster(self, lvl, posy):
+        '''
+        level_monster
+        dev: Joseph
+        date: 2022-01-20 18:41:39
+
+        Description:
+        Cree les monstres avec des attributs different selon le lvl de la partie
+
+        Parametres:
+            lvl [int] : level de la partie en cours
+            posy [int] : position des monstres selon l'axe y.
+        '''
         x = self.canvas.winfo_width() / (lvl + 1)
         for i in range(lvl):
             self.monster = monster.Monster(
@@ -70,16 +100,40 @@ class World:
         self.fct_player()
 
     def fct_monster(self):
+        '''
+        fct_monster
+        dev: Joseph
+        date: 2022-01-20 18:44:16
+
+        Description:
+        on parcours la liste de monstre et on leur applique les fonctions importantes (déplacment et fct des missiles).
+        '''
         for monster in self.list_monster:
             monster.deplacement_monstre()
             monster.deplacement_bullet()
             monster.suppr_bullet()
 
     def fct_player(self):
+        '''
+        fct_player
+        dev: Joseph
+        date: 2022-01-20 18:46:18
+
+        Description:
+        on déplace les missiles de Payer et on les supprimes.
+        '''
         self.player.deplacement_bullet()
         self.player.suppr_bullet()
 
     def shoot_monster(self):
+        '''
+        shoot_monster
+        dev: Joseph
+        date: 2022-01-20 18:47:41
+
+        Description:
+        On choisie un monstre aleatoire et on le fait tirer un missile.
+        '''
         if len(self.list_monster) - 1 != 0:
             try:
                 rand = random.randint(0, len(self.list_monster) - 1)
@@ -90,7 +144,19 @@ class World:
         self.canvas.after(int((self.lvl * 100)), self.shoot_monster)
 
     def boss_stage(self):
+<<<<<<< HEAD
         if self.list_monster == [] and self.lvl == 4  and self.monster.name == "monster":
+=======
+        '''
+        boss_stage
+        dev: Adrien
+        date: 2022-01-20 18:48:13
+
+        Description:
+        Une fois le level 5 atteint on fait apparaitre un boss.
+        '''
+        if self.list_monster == [] and self.lvl == 4 and self.monster.name == "monster":
+>>>>>>> 931c2c73ae27a9728762985f042c0467445c8dc8
             x = self.canvas.winfo_width()
             self.monster = monster.Monster(
                 "Boss",
@@ -107,6 +173,14 @@ class World:
         self.list_monster.append(self.monster)
 
     def create_obstacle(self):
+        '''
+        create_obstacle
+        dev: Adrien
+        date: 2022-01-20 18:49:14
+
+        Description:
+        On fais apparaitre des obstacles (quantité aleatoire entre 1 et 3 a chaque level).
+        '''
         i = random.randint(1, 3)
         pile_coord = [100,600,1100]
         random.shuffle(pile_coord)
@@ -136,6 +210,14 @@ class World:
 
 
     def dead(self):
+        '''
+        dead
+        dev: Joseph
+        date: 2022-01-20 18:50:11
+
+        Description:
+        On vérifie les attributs de Monster et le Player pour savoir si ils sont mort, puis on les supprime si nécessaire.
+        '''
         for monster in self.list_monster:
             if monster.lives <= 0:
 
@@ -161,6 +243,14 @@ class World:
         self.lives_minus()
 
     def lives_minus(self):  # faut changer le nom de cette fct
+        '''
+        lives_minus
+    dev: Joseph et Adrien
+        date: 2022-01-20 18:52:30
+
+        Description:
+        [description]
+        '''
         for monster in self.list_monster:
             self.bullet_suppr = self.collision(self.player.bullets, monster)
             if self.bullet_suppr != []:

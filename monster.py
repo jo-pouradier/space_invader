@@ -6,11 +6,10 @@ class Monster(entity.Entity):
         '''
         deplacement_monstre
         dev: Joseph
-        date: [description]
+        date: 2022-01-20 18:31:36
 
         Description:
-        boizdvnozdfnvozkfdnv
-
+        Le monstre se déplace de 50px jusqu'a atteindre le bord de droite, puis change de direction, ainsi de suite.
         '''
         if self.position[0] < self.canvas.winfo_width() - 50 and self.direction == "r":
             self.position[0] += self.speed
