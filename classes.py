@@ -3,7 +3,7 @@ import tkinter as tk
 import os, sys
 from PIL import Image, ImageTk
 from tkinter import messagebox
-
+import pygame
 
 class MainView(tk.Frame):
     """
@@ -177,6 +177,7 @@ class World:
         )
         self.player.create(tag="player")
         self.canvas.focus_set()
+        pygame.mixer.init()
 
 
         #self.score = 0
@@ -264,7 +265,8 @@ class World:
         self.canvas.after(int((self.lvl* 100)), self.shoot_monster)
 
     def boss_stage(self):
-        if self.list_monster == [] and self.lvl == 4 and self.monster.name == "monster":
+        pygame.mixer.music.load("music_boss.mp3")
+        if self.list_monster == [] and (self.lvl == 4 or self.lvl==9) and self.monster.name == "monster":
             x = self.canvas.winfo_width()
             self.monster = Monster(
                 "Boss",
@@ -283,7 +285,9 @@ class World:
 
     def create_obstacle(self):
         i = random.randint(1,3)
-        print(i)
+        pile_coord = [50,450,950]
+        random.shuffle(pile_coord)
+
         x =  50   # self.canvas.winfo_width() / 3
         y =  400   # self.canvas.winfo_height() / 2)
         for nb in range(i):
@@ -292,14 +296,23 @@ class World:
                 1000,
                 self.canvas,
                 speed=0,
-                position=[x,y],
+                position=[pile_coord[-1],y],
                 img="images/obstacle_transparent_v3.png"
             )
             self.asteroide.create(tag="asteroide")
             self.list_asteroide.append(self.asteroide)
-            print('yes')
-            x +=500
+            self.depiler(pile_coord)
+            
+            
+    def pile_vide(self,pile):
+        if pile == []:
+            return True
+        else :
+            return False
 
+    def depiler(self,pile):
+        if self.pile_vide(pile) == False :
+            pile.pop()
 
 
 
@@ -420,7 +433,7 @@ class Entity:
         On met dans un dictionnaire l'objet tkinter (oval) et sa position ( par rapport en l'envoyeur).
 
         Parametres:
-            event [event] : <space> pour le payer ou rien pour un monstre.
+            event [event] : <space> pour le player ou rien pour un monstre.
         """
         try:
             key = event.keysym
