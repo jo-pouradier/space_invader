@@ -95,7 +95,6 @@ class MainView(tk.Frame):
             lambda e: [
                 self.new_background(self.background_image),
                 self.cv.tag_lower("background"),
-                print(1)
             ],
         )
         self.cv.bind("<Key>", self.world.player.deplacement_player)
