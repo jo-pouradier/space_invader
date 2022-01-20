@@ -144,9 +144,6 @@ class World:
         self.canvas.after(int((self.lvl * 100)), self.shoot_monster)
 
     def boss_stage(self):
-<<<<<<< HEAD
-        if self.list_monster == [] and self.lvl == 4  and self.monster.name == "monster":
-=======
         '''
         boss_stage
         dev: Adrien
@@ -156,7 +153,6 @@ class World:
         Une fois le level 5 atteint on fait apparaitre un boss.
         '''
         if self.list_monster == [] and self.lvl == 4 and self.monster.name == "monster":
->>>>>>> 931c2c73ae27a9728762985f042c0467445c8dc8
             x = self.canvas.winfo_width()
             self.monster = monster.Monster(
                 "Boss",
@@ -199,12 +195,36 @@ class World:
             self.depiler(pile_coord)
 
     def pile_vide(self,pile):
+        '''
+        pile_vide
+        dev: Adrien
+        date: 2022-01-20 19:08:20
+
+        Description:
+            vérifie si la pile est vide
+
+        Parametres:
+            pile [[list]] : [pile des coordonnées des obstacles à créer]
+        Returns:
+            [[bouleen]] : [True or False]
+        '''
         if pile == []:
             return True
         else : 
             return False
 
     def depiler(self,pile):
+        '''
+        depiler
+        dev: Adrien
+        date: 2022-01-20 19:10:08
+
+        Description:
+        supprime le dernier élément de la pile
+
+        Parametres:
+            pile [[list]] : [pile des coordonnées des obstacles à créer]
+        '''
         if self.pile_vide(pile)==False:
             pile.pop()
 
