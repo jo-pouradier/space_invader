@@ -178,7 +178,8 @@ class World:
         On fais apparaitre des obstacles (quantité aleatoire entre 1 et 3 a chaque level).
         '''
         i = random.randint(1, 3)
-        x = 50  # self.canvas.winfo_width() / 3
+        pile_coord = [100,600,1100]
+        random.shuffle(pile_coord)
         y = 400  # self.canvas.winfo_height() / 2)
         for nb in range(i):
             self.asteroide = entity.Entity(
@@ -186,12 +187,47 @@ class World:
                 1000,
                 self.canvas,
                 speed=0,
-                position=[x, y],
+                position=[pile_coord[-1], y],
                 img="images/obstacle_transparent_v3.png",
             )
             self.asteroide.create(tag="asteroide")
             self.list_asteroide.append(self.asteroide)
-            x += 500
+            self.depiler(pile_coord)
+
+    def pile_vide(self,pile):
+        '''
+        pile_vide
+        dev: Adrien
+        date: 2022-01-20 19:08:20
+
+        Description:
+            vérifie si la pile est vide
+
+        Parametres:
+            pile [[list]] : [pile des coordonnées des obstacles à créer]
+        Returns:
+            [[bouleen]] : [True or False]
+        '''
+        if pile == []:
+            return True
+        else : 
+            return False
+
+    def depiler(self,pile):
+        '''
+        depiler
+        dev: Adrien
+        date: 2022-01-20 19:10:08
+
+        Description:
+        supprime le dernier élément de la pile
+
+        Parametres:
+            pile [[list]] : [pile des coordonnées des obstacles à créer]
+        '''
+        if self.pile_vide(pile)==False:
+            pile.pop()
+
 
     def dead(self):
         '''
