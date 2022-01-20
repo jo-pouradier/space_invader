@@ -6,6 +6,8 @@ utilisation des commandes suivantes dans le terminal (macos et windows) pour ins
     python3 -m pip install --upgrade pip
     python3 -m pip install --upgrade Pillow
 
+GIT:
+
 POUR JOUER:
     lancer le fichier main.
     on se déplace grace aux flèches directionnelles, on tire avec la barre espace.

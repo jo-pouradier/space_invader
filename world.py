@@ -269,7 +269,7 @@ class World:
         date: 2022-01-20 18:52:30
 
         Description:
-        [permet de vérifier les collisions entre chaque type d'entité à chaque instant]
+        permet de vérifier les collisions entre chaque type d'entité à chaque instant
         '''
         """collisions des balles du joueur avec les monstres et des balles des monstres avec le player"""
         for monster in self.list_monster:
