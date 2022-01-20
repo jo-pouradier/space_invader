@@ -90,11 +90,12 @@ class MainView(tk.Frame):
         self.label_info()
 
         # bind des touches de commandes
-        self.cv.master.bind(
+        self.cv.bind(
             "r",
-            lambda: [
-                self.cv.new_background(self.cv.background_image),
-                self.cv.cv.tag_lower("background"),
+            lambda e: [
+                self.new_background(self.background_image),
+                self.cv.tag_lower("background"),
+                print(1)
             ],
         )
         self.cv.bind("<Key>", self.world.player.deplacement_player)
