@@ -233,7 +233,7 @@ class World:
         date: 2022-01-20 18:52:30
 
         Description:
-        [description]
+        FAUT UNE DESCRIPTION FRRRRRR
         '''
         for monster in self.list_monster:
             self.bullet_suppr = self.collision(self.player.bullets, monster)
