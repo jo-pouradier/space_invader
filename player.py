@@ -4,11 +4,11 @@ import entity
 class Player(entity.Entity):
     """
     Player
-    dev: Adrien
+    dev: Adrien et Joseph
     date: 2021-12-17 23:40:06
 
     Description:
-    Classe qui donne les methodes qui s'appliqueront a player en tant qu'entité du jeu.
+    Classe qui donne les methodes qui s'appliqueront a Player en tant qu'entité du jeu.
 
     Parametres:
         Entity [class] : voir description de la class
@@ -32,25 +32,25 @@ class Player(entity.Entity):
         """
         side = event.keysym
         if side == "Left":
-            if self.position[0] - self.speed > 0:
+            if self.position[0] - self.speed > 0+50:
                 self.position[0] -= self.speed
             else:
                 self.position[0] = self.position[0]
 
         if side == "Right":
-            if self.position[0] + self.speed < self.canvas.winfo_width():
+            if self.position[0] + self.speed < self.canvas.winfo_width()-50:
                 self.position[0] += self.speed
             else:
                 self.position[0] = self.position[0]
 
         if side == "Up":
-            if self.position[1] - self.speed > 0 + 45:
+            if self.position[1] - self.speed > 0 + 50:
                 self.position[1] -= self.speed
             else:
                 self.position[1] = self.position[1]
 
         if side == "Down":
-            if self.position[1] + self.speed < self.canvas.winfo_height():
+            if self.position[1] + self.speed < self.canvas.winfo_height()-50:
                 self.position[1] += self.speed
             else:
                 self.position[1] = self.position[1]

@@ -8,32 +8,29 @@ import world
 class MainView(tk.Frame):
     """
     main_view
-    dev: Joseph
+    dev: Joseph et Adrien
     date: 2021-12-16 09:54:25
 
     Description:
-    Cree la fenetre principale du jeu space invader, avec ses proporiété
+    Cree la fenetre principale du jeu space invader, avec ses propriétées
 
     Parametres:
-        tk [tk] : cree une frame tkinter dans la page principale
+        tk.Frame [tkinter] : crée une frame tkinter dans la fenetre principale
     """
 
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
-        self.configure(highlightbackground="yellow", highlightthickness=2)
         self.pack(side="top", fill="both", expand=True)
+
         # frame pour afficher les info du jeu : nbr de vie, score, boutons...
         self.info_frame = tk.Frame(self)
         self.info_frame.grid(row=0, column=0, sticky="nsew")
-        self.info_frame.configure(
-            highlightbackground="red", highlightthickness=2)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
         # canvas qui aura toutes les entitées du jeu.
         self.cv = tk.Canvas(self)
         self.cv.focus_set()
-        self.cv.configure(highlightbackground="blue", highlightthickness=2)
         self.cv.grid(row=1, column=0, sticky="nsew")
 
         # creation des boutons
@@ -81,13 +78,10 @@ class MainView(tk.Frame):
         )
         background_menu.grid(row=0, column=4, sticky="esw")
 
-        self.centrage()
-
         # creation du background
         self.cv.update_idletasks()
         self.new_background("images/background_space_3.png")
         self.world = world.World(self.cv)
-        self.label_info()
 
         # bind des touches de commandes
         self.cv.bind(
@@ -100,18 +94,28 @@ class MainView(tk.Frame):
         self.cv.bind("<Key>", self.world.player.deplacement_player)
         self.cv.bind("<space>", self.world.player.shoot)
 
+        self.label_info()
+        self.centrage()
         self.multi_fct()
 
     def label_info(self):
+        '''
+        label_info
+        dev: Joseph
+        date: 2022-01-20 18:28:09
+
+        Description:
+        On cree les labels qui permettent d'afficher le score, les vies du joueur, et le level atteint.
+        '''
         self.label_score = tk.Label(
             self.info_frame, text="score: " +
-            str(self.world.player.score) + " ."
+            str(self.world.player.score) + "  "
         )
         self.label_lives = tk.Label(
-            self.info_frame, text="vie: " + str(self.world.player.lives) + " ."
+            self.info_frame, text="vie: " + str(self.world.player.lives) + "  "
         )
         self.label_lvl = tk.Label(
-            self.info_frame, text="level: " + str(self.world.lvl) + " ."
+            self.info_frame, text="level: " + str(self.world.lvl) + "  "
         )
         self.label_lives.grid(row=0, column=1, sticky="nsew")
         self.label_lvl.grid(row=0, column=2, sticky="nsew")
@@ -155,6 +159,14 @@ class MainView(tk.Frame):
         os.execl(sys.executable, sys.executable, *sys.argv)
 
     def multi_fct(self):
+        '''
+        multi_fct
+        dev: Joseph
+        date: 2022-01-20 18:29:45
+
+        Description:
+        on lance les fonctions qui cree les monstres, verifient les collisions, et met a jour les labels.
+        '''
         self.world.creation_lvl()
         self.world.fct_monster()
         self.world.fct_player()

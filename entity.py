@@ -4,7 +4,7 @@ import tkinter as tk
 class Entity:
     """
     Entity
-    dev: Adrien
+    dev: Adrien et Joseph
     date: 2021-12-16 09:56:36
 
     Description:
